@@ -1,0 +1,4 @@
+{
+	"id" : "123",
+	"uri" : "http://bitmouth.com/networkid/123"
+}
