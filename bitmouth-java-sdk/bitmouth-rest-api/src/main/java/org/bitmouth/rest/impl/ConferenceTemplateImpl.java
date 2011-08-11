@@ -21,6 +21,9 @@
  */
 package org.bitmouth.rest.impl;
 
+import java.io.InputStream;
+import java.net.URL;
+
 import org.bitmouth.rest.api.ConferenceTemplate;
 import org.bitmouth.rest.api.exceptions.AuthorizationException;
 import org.bitmouth.rest.api.exceptions.BadGatewayException;
@@ -28,63 +31,145 @@ import org.bitmouth.rest.api.exceptions.BadRequestException;
 import org.bitmouth.rest.api.exceptions.ResourceNotFoundException;
 import org.bitmouth.rest.api.resources.ConferenceInfo;
 import org.bitmouth.rest.api.resources.NetworkIdInfo;
+import org.bitmouth.rest.util.ConnectionUtil;
+import org.bitmouth.rest.util.UrlBuilder;
+import org.bitmouth.rest.util.UrlBuilder.URLBuilderFactory;
 
 /**
  * @author Shamaila Tahir
- *
+ * 
  */
 public class ConferenceTemplateImpl implements ConferenceTemplate {
+    private URLBuilderFactory urlBuilderFactory;
+    private ConferenceInfo conference;
 
-    /* (non-Javadoc)
-     * @see org.bitmouth.rest.api.ConferenceTemplate#addToConference(org.bitmouth.rest.api.resources.NetworkIdInfo[])
+    /**
+     * @param urlBuilderFactory
+     * @param conference
+     */
+    public ConferenceTemplateImpl(URLBuilderFactory urlBuilderFactory,
+	    ConferenceInfo conference) {
+	super();
+	this.urlBuilderFactory = urlBuilderFactory;
+	this.conference = conference;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.bitmouth.rest.api.ConferenceTemplate#addToConference(org.bitmouth
+     * .rest.api.resources.NetworkIdInfo[])
      */
     public void addToConference(NetworkIdInfo... networkIdInfos)
 	    throws BadRequestException, BadGatewayException {
-	// TODO Auto-generated method stub
+	UrlBuilder urlBuilder = urlBuilderFactory.get()
+		.addPathSegment("conference")
+		.addPathSegment(conference.getConferenceId());
+	for (NetworkIdInfo networkId : networkIdInfos) {
+	    urlBuilder.addParameter("networkid", networkId.getNetworkId());
+	}
+	URL url = urlBuilder.createForPost();
+	ConnectionUtil.doPost(url, conference.getConferenceId(),
+		urlBuilder.getPostContents());
 
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.bitmouth.rest.api.ConferenceTemplate#closeConference()
      */
     public void closeConference() throws BadRequestException,
 	    BadGatewayException, ResourceNotFoundException {
-	// TODO Auto-generated method stub
+	UrlBuilder urlBuilder = urlBuilderFactory.get()
+		.addPathSegment("conference")
+		.addPathSegment(conference.getConferenceId());
+	URL url = urlBuilder.createForPost();
+	ConnectionUtil.doPost(url, conference.getConferenceId(),
+		urlBuilder.getPostContents());
 
     }
 
-    /* (non-Javadoc)
-     * @see org.bitmouth.rest.api.ConferenceTemplate#hangup(org.bitmouth.rest.api.resources.NetworkIdInfo)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.bitmouth.rest.api.ConferenceTemplate#hangup(org.bitmouth.rest.api
+     * .resources.NetworkIdInfo)
      */
-    public void hangup(NetworkIdInfo networkId) throws BadRequestException,
+    public void hangup(NetworkIdInfo networkInfo) throws BadRequestException,
 	    BadGatewayException, ResourceNotFoundException,
 	    AuthorizationException {
-	// TODO Auto-generated method stub
+	UrlBuilder urlBuilder = urlBuilderFactory.get()
+		.addPathSegment("conference")
+		.addPathSegment(conference.getConferenceId())
+		.addPathSegment(networkInfo.getNetworkId())
+		.addPathSegment("hangup");
+	URL url = urlBuilder.createForPost();
+	ConnectionUtil.doPost(url, conference.getConferenceId(),
+		urlBuilder.getPostContents());
 
     }
 
-    /* (non-Javadoc)
-     * @see org.bitmouth.rest.api.ConferenceTemplate#move(org.bitmouth.rest.api.resources.ConferenceInfo, org.bitmouth.rest.api.resources.NetworkIdInfo)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.bitmouth.rest.api.ConferenceTemplate#move(org.bitmouth.rest.api.resources
+     * .ConferenceInfo, org.bitmouth.rest.api.resources.NetworkIdInfo)
      */
-    public void move(ConferenceInfo toConference, NetworkIdInfo networkId) {
-	// TODO Auto-generated method stub
+    public void move(ConferenceInfo toConference, NetworkIdInfo networkInfo) {
+	UrlBuilder urlBuilder = urlBuilderFactory.get()
+		.addPathSegment("conference")
+		.addPathSegment(conference.getConferenceId())
+		.addPathSegment(toConference.getConferenceId())
+		.addPathSegment(networkInfo.getNetworkId())
+		.addPathSegment("move");
+	URL url = urlBuilder.createForPost();
+	ConnectionUtil.doPost(url, conference.getConferenceId(),
+		urlBuilder.getPostContents());
 
     }
 
-    /* (non-Javadoc)
-     * @see org.bitmouth.rest.api.ConferenceTemplate#mute(org.bitmouth.rest.api.resources.NetworkIdInfo)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.bitmouth.rest.api.ConferenceTemplate#mute(org.bitmouth.rest.api.resources
+     * .NetworkIdInfo)
      */
-    public void mute(NetworkIdInfo networkId) {
-	// TODO Auto-generated method stub
-
+    public void mute(NetworkIdInfo networkInfo) {
+	doMute(true, networkInfo);
     }
 
-    /* (non-Javadoc)
-     * @see org.bitmouth.rest.api.ConferenceTemplate#unmute(org.bitmouth.rest.api.resources.NetworkIdInfo)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.bitmouth.rest.api.ConferenceTemplate#unmute(org.bitmouth.rest.api
+     * .resources.NetworkIdInfo)
      */
     public void unmute(NetworkIdInfo networkId) {
-	// TODO Auto-generated method stub
+	doMute(false, networkId);
 
+    }
+
+    public void doMute(boolean mute, NetworkIdInfo networkInfo) {
+	UrlBuilder urlBuilder = urlBuilderFactory.get()
+		.addPathSegment("conference")
+		.addPathSegment(conference.getConferenceId())
+		.addPathSegment(networkInfo.getNetworkId())
+		.addParameter("conferenceid ", conference.getConferenceId())
+		.addParameter("networkid ", networkInfo.getNetworkId());
+		if(mute)
+		    urlBuilder.addParameter("action", "mute");
+		else 
+		    urlBuilder.addParameter("action", "unmute");
+		
+	URL url = urlBuilder.createForPost();
+	ConnectionUtil.doPost(url, conference.getConferenceId(),
+		urlBuilder.getPostContents());
     }
 
 }

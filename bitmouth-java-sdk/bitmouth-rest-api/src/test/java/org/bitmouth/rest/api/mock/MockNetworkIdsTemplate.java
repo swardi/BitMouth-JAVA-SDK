@@ -33,8 +33,9 @@ import org.bitmouth.rest.api.exceptions.BadGatewayException;
 import org.bitmouth.rest.api.exceptions.BadRequestException;
 import org.bitmouth.rest.api.exceptions.ResourceNotFoundException;
 import org.bitmouth.rest.api.resources.NetworkIdInfo;
-import org.bitmouth.rest.impl.Util;
 import org.bitmouth.rest.impl.resources.NetworkIdInfoImpl;
+import org.bitmouth.rest.util.JSONHelper;
+import org.bitmouth.rest.util.Util;
 
 /**
  * @author Shamaila Tahir

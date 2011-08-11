@@ -26,5 +26,5 @@ package org.bitmouth.rest.api;
  * @author Shamaila Tahir
  */
 public interface BitMouthClientFactory {
-    public BitMouthClient createClient(String appKey);
+    public BitMouthClient createClient(String appKey, String baseAPIUrl);
 }

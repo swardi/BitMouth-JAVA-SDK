@@ -26,5 +26,10 @@ package org.bitmouth.rest.api.resources;
  * @author Shamaila Tahir
  */
 public interface NetworkIdInfo {
+     /**
+     * @return the networkId
+     */
+    public String getNetworkId();
+    public void setNetworkId(String id);
     public String getUri();
 }

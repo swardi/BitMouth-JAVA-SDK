@@ -103,4 +103,11 @@ public class MockBitMouthClient implements BitMouthClient {
 	return mockConferenceTemplate;
     }
 
+    /* (non-Javadoc)
+     * @see org.bitmouth.rest.api.BitMouthClient#getAPIVersion()
+     */
+    public String getAPIVersion() {
+	return "1.0";
+    }
+
 }

@@ -22,13 +22,23 @@
 package org.bitmouth.rest.impl;
 
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 import org.bitmouth.rest.api.BitMouthClient;
 import org.bitmouth.rest.api.ConferenceTemplate;
 import org.bitmouth.rest.api.MediaTemplate;
 import org.bitmouth.rest.api.NetworkIdsTemplate;
+import org.bitmouth.rest.api.exceptions.ConnectionException;
 import org.bitmouth.rest.api.resources.ConferenceInfo;
 import org.bitmouth.rest.api.resources.MediaInfo;
 import org.bitmouth.rest.api.resources.NetworkIdInfo;
+import org.bitmouth.rest.util.ConnectionUtil;
+import org.bitmouth.rest.util.JSONHelper;
+import org.bitmouth.rest.util.UrlBuilder;
+import org.bitmouth.rest.util.UrlBuilder.URLBuilderFactory;
 
 /**
  * @author Shamaila Tahir
@@ -36,28 +46,39 @@ import org.bitmouth.rest.api.resources.NetworkIdInfo;
  */
 public class BitMouthClientImpl implements BitMouthClient {
 
+    private URLBuilderFactory urlBuilderFactory;
+
+    /**
+     * @param urlBuilderFactory
+     */
+    public BitMouthClientImpl(URLBuilderFactory urlBuilderFactory) {
+	this.urlBuilderFactory = urlBuilderFactory;
+    }
+
     /* (non-Javadoc)
      * @see org.bitmouth.rest.api.BitMouthClient#networkIds()
      */
     public NetworkIdsTemplate networkIds() {
-	// TODO Auto-generated method stub
-	return null;
+	return new NetworkIdsTemplateImpl(urlBuilderFactory);
     }
 
     /* (non-Javadoc)
      * @see org.bitmouth.rest.api.BitMouthClient#createMedia(org.bitmouth.rest.api.plumbing.NetworkIdInfo)
      */
-    public MediaInfo createMedia(NetworkIdInfo networkId) {
-	// TODO Auto-generated method stub
-	return null;
+    public MediaInfo createMedia(NetworkIdInfo networkInfo) {
+	UrlBuilder urlBuilder = urlBuilderFactory.get();
+	URL url = urlBuilder.addPathSegment("media").addParameter("action","create").addParameter("networkid", networkInfo.getNetworkId()).createForPost();
+        InputStream inputStream = ConnectionUtil.doPost(url, networkInfo.getUri(), urlBuilder.getPostContents());
+	MediaInfo mediaInfo=null;
+	mediaInfo=JSONHelper.readMediaInfoFromJSON(inputStream);
+	return mediaInfo;
     }
 
     /* (non-Javadoc)
      * @see org.bitmouth.rest.api.BitMouthClient#media(org.bitmouth.rest.api.plumbing.MediaInfo)
      */
     public MediaTemplate media(MediaInfo mediaId) {
-	// TODO Auto-generated method stub
-	return null;
+	return new MediaTemplateImpl(mediaId, urlBuilderFactory);
     }
 
     /* (non-Javadoc)
@@ -65,16 +86,37 @@ public class BitMouthClientImpl implements BitMouthClient {
      */
     public ConferenceInfo createConference(boolean record,
 	    NetworkIdInfo... networkIds) {
-	// TODO Auto-generated method stub
-	return null;
+	UrlBuilder urlBuilder = urlBuilderFactory.get()
+				.addPathSegment("call")
+				.addParameter("record ", record);
+	
+	for(NetworkIdInfo networkId : networkIds){
+	    urlBuilder.addParameter("networkid", networkId.getNetworkId());
+	}
+	URL url = urlBuilder.createForPost();
+        ConnectionUtil.doPost(url, "Conference info", urlBuilder.getPostContents());
+        ConferenceInfo conferenceInfo=null;
+	return conferenceInfo;
     }
 
     /* (non-Javadoc)
      * @see org.bitmouth.rest.api.BitMouthClient#conference(org.bitmouth.rest.api.plumbing.ConferenceInfo)
      */
     public ConferenceTemplate conference(ConferenceInfo conference) {
-	// TODO Auto-generated method stub
-	return null;
+	return new ConferenceTemplateImpl(urlBuilderFactory, conference);
     }
+
+    /* (non-Javadoc)
+     * @see org.bitmouth.rest.api.BitMouthClient#getAPIVersion()
+     */
+    public String getAPIVersion() {
+	UrlBuilder urlBuilder = urlBuilderFactory.get().addPathSegment("version");
+	URL url = urlBuilder.createForGet();
+	InputStream inputStream = ConnectionUtil.doGet(url,"Version Info");
+	
+	return JSONHelper.readInputStreamAsString(inputStream);
+    }
+    
+    
         
 }

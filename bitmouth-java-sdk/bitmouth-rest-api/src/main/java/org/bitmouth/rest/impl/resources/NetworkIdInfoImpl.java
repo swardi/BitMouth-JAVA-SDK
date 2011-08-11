@@ -30,6 +30,7 @@ import org.bitmouth.rest.api.resources.NetworkIdInfo;
 public class NetworkIdInfoImpl implements NetworkIdInfo {
 
     private String uri;
+    private String networkId;
 
     /* (non-Javadoc)
      * @see org.bitmouth.rest.api.resources.NetworkIdInfo#getUri()
@@ -38,6 +39,19 @@ public class NetworkIdInfoImpl implements NetworkIdInfo {
 	return uri;
     }
 
+    /**
+     * @return the networkId
+     */
+    public String getNetworkId() {
+	return networkId;
+    }
+    
+    /**
+     * @param networkId the networkId to set
+     */
+    public void setNetworkId(String networkId) {
+	this.networkId = networkId;
+    }
     /**
      * @param uri the uri to set
      */

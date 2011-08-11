@@ -21,12 +21,24 @@
  */
 package org.bitmouth.rest.impl;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import org.bitmouth.rest.api.NetworkIdsTemplate;
 import org.bitmouth.rest.api.exceptions.AuthorizationException;
 import org.bitmouth.rest.api.exceptions.BadGatewayException;
 import org.bitmouth.rest.api.exceptions.BadRequestException;
+import org.bitmouth.rest.api.exceptions.ConnectionException;
+import org.bitmouth.rest.api.exceptions.NoContentException;
 import org.bitmouth.rest.api.exceptions.ResourceNotFoundException;
 import org.bitmouth.rest.api.resources.NetworkIdInfo;
+import org.bitmouth.rest.util.ConnectionUtil;
+import org.bitmouth.rest.util.JSONHelper;
+import org.bitmouth.rest.util.UrlBuilder;
+import org.bitmouth.rest.util.UrlBuilder.URLBuilderFactory;
 
 /**
  * @author Shamaila Tahir
@@ -34,12 +46,25 @@ import org.bitmouth.rest.api.resources.NetworkIdInfo;
  */
 public class NetworkIdsTemplateImpl implements NetworkIdsTemplate{
 
+    private URLBuilderFactory urlBuilderFactory;
+    
+    public NetworkIdsTemplateImpl(URLBuilderFactory urlBuilderFactory) {
+	this.urlBuilderFactory = urlBuilderFactory;
+    }
+    
     /* (non-Javadoc)
      * @see org.bitmouth.rest.api.NetworkIdsTemplate#isRegistered(java.lang.String)
      */
     public boolean isRegistered(String networkId) throws AuthorizationException {
-	// TODO Auto-generated method stub
-	return false;
+	UrlBuilder urlBuilder = urlBuilderFactory.get();
+	URL url = urlBuilder.addPathSegment("registrant")
+		.addPathSegment(networkId)
+		.addParameter("query", "exists")
+		.createForGet();
+	InputStream inputStream = ConnectionUtil.doGet(url, networkId);
+	NetworkIdInfo networkIdInfo = JSONHelper
+		.readNetworkIdInfoFromJSON(inputStream);
+	return networkIdInfo != null;
     }
 
     /* (non-Javadoc)
@@ -47,17 +72,37 @@ public class NetworkIdsTemplateImpl implements NetworkIdsTemplate{
      */
     public NetworkIdInfo getNetworkIdAssociatedWithApplication(String networkId)
 	    throws ResourceNotFoundException, AuthorizationException {
-	// TODO Auto-generated method stub
-	return null;
+	UrlBuilder urlBuilder = urlBuilderFactory.get();
+	URL url = urlBuilder.addPathSegment("registrant")
+		.addPathSegment(networkId)
+		.addParameter("query", "related")
+		.createForGet();
+	InputStream inputStream = ConnectionUtil.doGet(url, networkId);
+	NetworkIdInfo networkIdInfo = JSONHelper
+		.readNetworkIdInfoFromJSON(inputStream);
+	return networkIdInfo;
     }
 
-    /* (non-Javadoc)
-     * @see org.bitmouth.rest.api.NetworkIdsTemplate#register(java.lang.String, java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.bitmouth.rest.api.NetworkIdsTemplate#register(java.lang.String,
+     * java.lang.String)
      */
     public NetworkIdInfo register(String networkId, String phone)
 	    throws BadRequestException, BadGatewayException {
-	// TODO Auto-generated method stub
-	return null;
+	UrlBuilder urlBuilder = urlBuilderFactory.get();
+	URL url = urlBuilder.addPathSegment("registrant")
+	.addParameter("networkid", networkId)
+	.addParameter("phone", phone)
+	.createForPost();
+	InputStream inputStream = ConnectionUtil.doPost(url, networkId,
+		urlBuilder.getPostContents());
+	
+	NetworkIdInfo networkIdinfo = JSONHelper.readNetworkIdInfoFromJSON(inputStream);
+	if(networkIdinfo != null)
+	    networkIdinfo.setNetworkId(networkId);
+	return networkIdinfo;
     }
 
 }

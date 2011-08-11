@@ -21,70 +21,121 @@
  */
 package org.bitmouth.rest.impl;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 import org.bitmouth.rest.api.MediaTemplate;
 import org.bitmouth.rest.api.exceptions.BadGatewayException;
 import org.bitmouth.rest.api.exceptions.BadRequestException;
+import org.bitmouth.rest.api.exceptions.ConnectionException;
 import org.bitmouth.rest.api.exceptions.ResourceNotFoundException;
 import org.bitmouth.rest.api.resources.MediaInfo;
 import org.bitmouth.rest.api.resources.NetworkIdInfo;
 import org.bitmouth.rest.api.resources.UploadInfo;
+import org.bitmouth.rest.util.ConnectionUtil;
+import org.bitmouth.rest.util.JSONHelper;
+import org.bitmouth.rest.util.UrlBuilder;
+import org.bitmouth.rest.util.UrlBuilder.URLBuilderFactory;
 
 /**
  * @author Shamaila Tahir
- *
+ * 
  */
-public class MediaTemplateImpl implements MediaTemplate{
+public class MediaTemplateImpl implements MediaTemplate {
 
-    /* (non-Javadoc)
-     * @see org.bitmouth.rest.api.MediaTemplate#create(java.lang.String)
+    private MediaInfo mediaInfo;
+    private URLBuilderFactory urlBuilderFactory;
+
+    /**
+     * @param mediaInfo
+     * @param urlBuilderFactory
      */
-    public MediaInfo create(String networkId) {
-	// TODO Auto-generated method stub
-	return null;
+    public MediaTemplateImpl(MediaInfo mediaInfo, URLBuilderFactory urlBuilderFactory) {
+	super();
+	this.mediaInfo = mediaInfo;
+	this.urlBuilderFactory = urlBuilderFactory;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.bitmouth.rest.api.MediaTemplate#record(java.lang.String)
      */
-    public MediaInfo record(NetworkIdInfo networkid) throws BadRequestException,
-	    ResourceNotFoundException, BadGatewayException {
-	// TODO Auto-generated method stub
-	return null;
+    public MediaInfo record(NetworkIdInfo networkInfo)
+	    throws BadRequestException, ResourceNotFoundException,
+	    BadGatewayException {
+	UrlBuilder urlBuilder = urlBuilderFactory.get();
+	urlBuilder.addPathSegment("media")
+		  .addPathSegment(mediaInfo.getMediaId())
+		  .addParameter("networkid", networkInfo.getNetworkId())
+		  .addParameter("action", "record");
+	URL url = urlBuilder.createForPost();
+	String resourceId = networkInfo.getNetworkId();
+	InputStream is = ConnectionUtil.doPost(url, resourceId,urlBuilder.getPostContents());
+	return JSONHelper.readMediaInfoFromJSON(is);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.bitmouth.rest.api.MediaTemplate#blast(java.lang.String)
      */
-    public MediaInfo blast(NetworkIdInfo networkid) throws BadRequestException,
+    public MediaInfo blast(NetworkIdInfo networkInfo) throws BadRequestException,
 	    ResourceNotFoundException, BadGatewayException {
-	// TODO Auto-generated method stub
-	return null;
+	UrlBuilder urlBuilder = urlBuilderFactory.get().addPathSegment("media")
+	  		.addPathSegment(mediaInfo.getMediaId())
+	  		.addParameter("networkid", networkInfo.getNetworkId())
+	  		.addParameter("action", "record");
+	URL url = urlBuilder.createForPost();
+	InputStream is = ConnectionUtil.doPost(url, networkInfo.getNetworkId(),urlBuilder.getPostContents());
+	//TODO are you sure we want to replace class level mediaInfo with this newly created mediaInfo. see in grantUpload also
+	return mediaInfo = JSONHelper.readMediaInfoFromJSON(is);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.bitmouth.rest.api.MediaTemplate#grantUpload()
      */
     public UploadInfo grantUpload() throws BadRequestException,
 	    ResourceNotFoundException, BadGatewayException {
-	// TODO Auto-generated method stub
-	return null;
+	UrlBuilder urlBuilder = urlBuilderFactory.get().addPathSegment("media")
+		.addPathSegment(mediaInfo.getMediaId())
+		.addParameter("action", "upload_grant");
+        URL url = urlBuilder.createForPost();
+        InputStream is = ConnectionUtil.doPost(url,mediaInfo.getMediaId(),urlBuilder.getPostContents());
+        return JSONHelper.readUploadInfoFromJSON(is);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.bitmouth.rest.api.MediaTemplate#removeMedia()
      */
     public MediaInfo removeMedia() throws BadRequestException,
 	    ResourceNotFoundException, BadGatewayException {
-	// TODO Auto-generated method stub
-	return null;
+	UrlBuilder urlBuilder = urlBuilderFactory.get().addPathSegment("media")
+	.addPathSegment(mediaInfo.getMediaId())
+	.addParameter("action", "upload_grant");
+	URL url = urlBuilder.createForPost();
+	InputStream is = ConnectionUtil.doPost(url, mediaInfo.getMediaId(),urlBuilder.getPostContents());
+	return mediaInfo = JSONHelper.readMediaInfoFromJSON(is);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.bitmouth.rest.api.MediaTemplate#status()
      */
     public MediaInfo status() {
-	// TODO Auto-generated method stub
-	return null;
+	UrlBuilder urlBuilder = urlBuilderFactory.get().addPathSegment("media")
+			.addPathSegment(mediaInfo.getMediaId());
+	URL url = urlBuilder.createForGet();
+	InputStream is = ConnectionUtil.doGet(url, mediaInfo.getMediaId());
+	return JSONHelper.readMediaInfoFromJSON(is);
+
     }
 
 }

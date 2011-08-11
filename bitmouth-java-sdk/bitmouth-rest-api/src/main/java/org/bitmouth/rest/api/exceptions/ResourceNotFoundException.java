@@ -32,7 +32,7 @@ public class ResourceNotFoundException extends BitMouthAPIException {
      * @param resourceId
      */
     public ResourceNotFoundException(String resourceId) {
-	super();
+	super("Resource " + resourceId + " not found",null);
 	this.resourceId = resourceId;
     }
 

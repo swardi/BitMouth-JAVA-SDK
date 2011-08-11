@@ -26,5 +26,4 @@ package org.bitmouth.rest.api.exceptions;
  * @author Shamaila Tahir
  */
 public class NoContentException extends BitMouthAPIException {
-
 }

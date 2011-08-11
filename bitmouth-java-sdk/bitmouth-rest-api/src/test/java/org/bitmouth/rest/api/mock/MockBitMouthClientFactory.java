@@ -33,8 +33,8 @@ public class MockBitMouthClientFactory implements BitMouthClientFactory {
     /* (non-Javadoc)
      * @see org.bitmouth.rest.api.BitMouthClientFactory#createClient(java.lang.String)
      */
-    public BitMouthClient createClient(String appKey) {
-	return new MockBitMouthClient(appKey);
+    public BitMouthClient createClient(String appKey, String baseAPIUrl) {
+    	return new MockBitMouthClient(appKey);
     }
 
 }

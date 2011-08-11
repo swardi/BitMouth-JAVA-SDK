@@ -23,6 +23,7 @@ package org.bitmouth.rest.impl;
 
 import org.bitmouth.rest.api.BitMouthClient;
 import org.bitmouth.rest.api.BitMouthClientFactory;
+import org.bitmouth.rest.util.UrlBuilder;
 
 /**
  * @author Shamaila Tahir
@@ -33,8 +34,9 @@ public class BitMouthClientFactoryImpl implements BitMouthClientFactory {
     /* (non-Javadoc)
      * @see org.bitmouth.rest.api.BitMouthClientFactory#createClient(java.lang.String)
      */
-    public BitMouthClient createClient(String appKey) {
-	return new BitMouthClientImpl();
+    public BitMouthClient createClient(String appKey, String baseAPIUrl) {
+	
+	return new BitMouthClientImpl(new UrlBuilder.URLBuilderFactory(baseAPIUrl,appKey));
     }
 
 }

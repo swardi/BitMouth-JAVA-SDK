@@ -29,27 +29,28 @@ import junit.framework.TestCase;
  * @author Shamaila Tahir
  *
  */
-public class NetworkIdsTest extends TestCase{
- public void testRegisteredNetworkId(){
-     //The value of App key does not matter in this case
-     BitMouthClient client = BitMouth.createClient("abcd");
+public class NetworkIdsTest extends BaseBitmouthTestCase{
+    
+public void testRegisteredNetworkId(){
      boolean isRegistered = client.networkIds().isRegistered("123");
      System.out.println("isRegistered 123 " + isRegistered);
      assertTrue( isRegistered );
  }
  
  public void testUnregisteredNetworkId(){
-     //The value of App key does not matter in this case
-     BitMouthClient client = BitMouth.createClient("abcd");
-     boolean isRegistered = client.networkIds().isRegistered("124");
+     boolean isRegistered = client.networkIds().isRegistered("asd");
      System.out.println("isRegistered 124 " + isRegistered);
      assertFalse( isRegistered );          
  }
  
  public void testNetworkIdRelated(){
-     BitMouthClient client = BitMouth.createClient("myapp");
-     NetworkIdInfo associatedNetworkId = client.networkIds().getNetworkIdAssociatedWithApplication("");
+     NetworkIdInfo associatedNetworkId = client.networkIds().getNetworkIdAssociatedWithApplication("123");
      assertNotNull(associatedNetworkId);          
  }
  
+ 
+ public void testRegisterNetworkId(){
+     NetworkIdInfo newNetworkInfo = client.networkIds().register("22222", "349582");
+     assertNotNull(newNetworkInfo);          
+ }
 }

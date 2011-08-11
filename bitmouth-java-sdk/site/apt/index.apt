@@ -1,12 +1,21 @@
-  Welcome to the Sample Project, we hope you enjoy your time
-  on this project site.  We've tried to assemble some 
-  great user documentation and developer information, and 
-  we're really excited that you've taken the time to visit
-  this site.
+  Welcome to bitmouth sdk api.
 
-What is Sample Project
+What is bitmouth sdk.
+  
+How to use this SDK
 
-  Well, it's easy enough to explain.   This sample project is 
-  a sample of a project with a Maven-generated site from
-  Maven: The Definitive	Guide.   A dedicated team of volunteers
-  help maintain this sample site, and so on and so forth.
+Initializing bitmouth client
+  You can use bitmouth client object to register a network, create media and create conference.
+  
+  BitMouthClient client;
+  client = BitMouth.createClient("f180804f-5eda-4e6b-8f4e-ecea52362396", "https://api4.bitmouth.com/api/rest");
+  
+  
+  
+Registering network
+  NetworkIdInfo newNetworkInfo = client.networkIds().register("DESIRED_NETWORKID", "PHONE_NUMBER");
+
+Creating Media
+
+Creating Conference
+

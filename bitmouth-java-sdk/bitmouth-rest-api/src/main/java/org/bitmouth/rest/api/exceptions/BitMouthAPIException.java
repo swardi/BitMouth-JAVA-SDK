@@ -27,4 +27,20 @@ package org.bitmouth.rest.api.exceptions;
  */
 public class BitMouthAPIException extends RuntimeException {
 
+    /**
+     * 
+     */
+    public BitMouthAPIException() {
+	super();
+    }
+
+    /**
+     * @param message
+     * @param cause
+     */
+    public BitMouthAPIException(String message, Throwable cause) {
+	super(message, cause);
+    }
+    
+
 }

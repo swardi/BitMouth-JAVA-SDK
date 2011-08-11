@@ -32,8 +32,8 @@ import org.bitmouth.rest.api.resources.NetworkIdInfo;
  * BitMouthClient represents an interface to BitMouth for a particular application. 
  * Each BitMouthClient instance is associated with a particular BitMouthApplication 
  * The client exposes methods for creating and manipulating different resources on BitMouth server
- * Instances of BitMouthClient can be created with {@link BitMouth#createClient(String)} factory method 
- * @see BitMouth#createClient(String)
+ * Instances of BitMouthClient can be created with {@link BitMouth#createClient(String, String)} factory method 
+ * @see BitMouth#createClient(String, String)
  * @author Shamaila Tahir
  */
 public interface BitMouthClient {
@@ -71,4 +71,6 @@ public interface BitMouthClient {
      * @return
      */
     public ConferenceTemplate conference(ConferenceInfo conference);
+    
+    public String getAPIVersion();
 }

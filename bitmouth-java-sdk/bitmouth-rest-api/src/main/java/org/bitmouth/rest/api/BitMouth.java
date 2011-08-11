@@ -35,12 +35,13 @@ public class BitMouth {
 
     /**
      * This method is responsible for resolving a BitMouthClient implementation class and instantiating it
+     * @param baseUrl TODO
      * @return
      */
-    public static BitMouthClient createClient(String appKey){
+    public static BitMouthClient createClient(String appKey, String baseUrl){
 	//Find the BitMouth Client factory class
 	BitMouthClientFactory bitMouthClientFactory = lookupFactory();
-	return bitMouthClientFactory.createClient(appKey);	
+	return bitMouthClientFactory.createClient(appKey, baseUrl);	
     }
 
     /**
