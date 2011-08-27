@@ -21,10 +21,21 @@
  */
 package org.bitmouth.rest.api.exceptions;
 
+import java.io.IOException;
+
 /**
- * Thrown when attempt is made at accessing a Media that have no content
  * @author Shamaila Tahir
+ *
  */
-public class NoContentException extends BitMouthAPIException {
-    private static final long serialVersionUID = -8065837340826807525L;
+public class ConnectionException extends BitMouthAPIException {
+    private static final long serialVersionUID = 511104461850973691L;
+
+    /**
+     * @param string
+     * @param e
+     */
+    public ConnectionException(String string, IOException e) {
+	super(string,e);
+    }
+
 }

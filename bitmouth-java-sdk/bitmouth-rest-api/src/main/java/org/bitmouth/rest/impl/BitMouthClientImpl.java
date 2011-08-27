@@ -22,16 +22,13 @@
 package org.bitmouth.rest.impl;
 
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.net.URL;
 
 import org.bitmouth.rest.api.BitMouthClient;
 import org.bitmouth.rest.api.ConferenceTemplate;
 import org.bitmouth.rest.api.MediaTemplate;
 import org.bitmouth.rest.api.NetworkIdsTemplate;
-import org.bitmouth.rest.api.exceptions.ConnectionException;
 import org.bitmouth.rest.api.resources.ConferenceInfo;
 import org.bitmouth.rest.api.resources.MediaInfo;
 import org.bitmouth.rest.api.resources.NetworkIdInfo;
@@ -65,10 +62,10 @@ public class BitMouthClientImpl implements BitMouthClient {
     /* (non-Javadoc)
      * @see org.bitmouth.rest.api.BitMouthClient#createMedia(org.bitmouth.rest.api.plumbing.NetworkIdInfo)
      */
-    public MediaInfo createMedia(NetworkIdInfo networkInfo) {
+    public MediaInfo createMedia() {
 	UrlBuilder urlBuilder = urlBuilderFactory.get();
-	URL url = urlBuilder.addPathSegment("media").addParameter("action","create").addParameter("networkid", networkInfo.getNetworkId()).createForPost();
-        InputStream inputStream = ConnectionUtil.doPost(url, networkInfo.getUri(), urlBuilder.getPostContents());
+	URL url = urlBuilder.addPathSegment("media").create();
+        InputStream inputStream = ConnectionUtil.doPost(url, "", urlBuilder.getPostContents());
 	MediaInfo mediaInfo=null;
 	mediaInfo=JSONHelper.readMediaInfoFromJSON(inputStream);
 	return mediaInfo;
@@ -87,13 +84,13 @@ public class BitMouthClientImpl implements BitMouthClient {
     public ConferenceInfo createConference(boolean record,
 	    NetworkIdInfo... networkIds) {
 	UrlBuilder urlBuilder = urlBuilderFactory.get()
-				.addPathSegment("call")
-				.addParameter("record ", record);
+				.addPathSegment("conference")
+				.addPostParameter("record ", record);
 	
 	for(NetworkIdInfo networkId : networkIds){
-	    urlBuilder.addParameter("networkid", networkId.getNetworkId());
+	    urlBuilder.addPostParameter("networkid", networkId.getNetworkId());
 	}
-	URL url = urlBuilder.createForPost();
+	URL url = urlBuilder.create();
         ConnectionUtil.doPost(url, "Conference info", urlBuilder.getPostContents());
         ConferenceInfo conferenceInfo=null;
 	return conferenceInfo;
@@ -111,7 +108,7 @@ public class BitMouthClientImpl implements BitMouthClient {
      */
     public String getAPIVersion() {
 	UrlBuilder urlBuilder = urlBuilderFactory.get().addPathSegment("version");
-	URL url = urlBuilder.createForGet();
+	URL url = urlBuilder.create();
 	InputStream inputStream = ConnectionUtil.doGet(url,"Version Info");
 	
 	return JSONHelper.readInputStreamAsString(inputStream);

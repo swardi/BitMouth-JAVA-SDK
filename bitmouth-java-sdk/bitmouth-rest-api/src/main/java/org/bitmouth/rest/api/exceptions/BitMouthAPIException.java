@@ -26,6 +26,7 @@ package org.bitmouth.rest.api.exceptions;
  * @author Shamaila Tahir
  */
 public class BitMouthAPIException extends RuntimeException {
+    private static final long serialVersionUID = 1848439115726989921L;
 
     /**
      * 

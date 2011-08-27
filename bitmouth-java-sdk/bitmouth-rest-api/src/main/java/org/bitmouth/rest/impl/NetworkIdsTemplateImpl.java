@@ -21,18 +21,13 @@
  */
 package org.bitmouth.rest.impl;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.bitmouth.rest.api.NetworkIdsTemplate;
 import org.bitmouth.rest.api.exceptions.AuthorizationException;
 import org.bitmouth.rest.api.exceptions.BadGatewayException;
 import org.bitmouth.rest.api.exceptions.BadRequestException;
-import org.bitmouth.rest.api.exceptions.ConnectionException;
-import org.bitmouth.rest.api.exceptions.NoContentException;
 import org.bitmouth.rest.api.exceptions.ResourceNotFoundException;
 import org.bitmouth.rest.api.resources.NetworkIdInfo;
 import org.bitmouth.rest.util.ConnectionUtil;
@@ -59,28 +54,39 @@ public class NetworkIdsTemplateImpl implements NetworkIdsTemplate{
 	UrlBuilder urlBuilder = urlBuilderFactory.get();
 	URL url = urlBuilder.addPathSegment("registrant")
 		.addPathSegment(networkId)
-		.addParameter("query", "exists")
-		.createForGet();
-	InputStream inputStream = ConnectionUtil.doGet(url, networkId);
-	NetworkIdInfo networkIdInfo = JSONHelper
-		.readNetworkIdInfoFromJSON(inputStream);
-	return networkIdInfo != null;
+		.addPostParameter("query", "exists")
+		.create();
+	
+	InputStream inputStream;
+	try {
+	    inputStream = ConnectionUtil.doPost(url, networkId,
+	    	urlBuilder.getPostContents());
+	} catch (ResourceNotFoundException e) {
+	    return false;
+	}
+
+	return true;
     }
 
     /* (non-Javadoc)
      * @see org.bitmouth.rest.api.NetworkIdsTemplate#getNetworkIdAssociatedWithApplication(java.lang.String)
      */
-    public NetworkIdInfo getNetworkIdAssociatedWithApplication(String networkId)
-	    throws ResourceNotFoundException, AuthorizationException {
+    public boolean getNetworkIdAssociatedWithApplication(String networkId)
+	    throws AuthorizationException {
 	UrlBuilder urlBuilder = urlBuilderFactory.get();
 	URL url = urlBuilder.addPathSegment("registrant")
 		.addPathSegment(networkId)
-		.addParameter("query", "related")
-		.createForGet();
-	InputStream inputStream = ConnectionUtil.doGet(url, networkId);
-	NetworkIdInfo networkIdInfo = JSONHelper
-		.readNetworkIdInfoFromJSON(inputStream);
-	return networkIdInfo;
+		.addPostParameter("query", "related")
+		.create();
+	
+	try {
+	    InputStream inputStream = ConnectionUtil.doPost(url, networkId,
+			urlBuilder.getPostContents());
+	} catch (ResourceNotFoundException e) {
+	    return false;
+	}
+
+	return true;
     }
 
     /*
@@ -93,9 +99,9 @@ public class NetworkIdsTemplateImpl implements NetworkIdsTemplate{
 	    throws BadRequestException, BadGatewayException {
 	UrlBuilder urlBuilder = urlBuilderFactory.get();
 	URL url = urlBuilder.addPathSegment("registrant")
-	.addParameter("networkid", networkId)
-	.addParameter("phone", phone)
-	.createForPost();
+	.addPostParameter("networkid", networkId)
+	.addPostParameter("phone", phone)
+	.create();
 	InputStream inputStream = ConnectionUtil.doPost(url, networkId,
 		urlBuilder.getPostContents());
 	

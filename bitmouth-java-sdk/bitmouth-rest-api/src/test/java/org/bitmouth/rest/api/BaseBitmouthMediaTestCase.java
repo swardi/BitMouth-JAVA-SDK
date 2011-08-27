@@ -19,12 +19,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.bitmouth.rest.api.exceptions;
+package org.bitmouth.rest.api;
+
+import org.bitmouth.rest.api.resources.MediaInfo;
+import org.bitmouth.rest.api.resources.NetworkIdInfo;
+import org.bitmouth.rest.impl.MediaTemplateImpl;
 
 /**
- * Thrown when attempt is made at accessing a Media that have no content
  * @author Shamaila Tahir
+ *
  */
-public class NoContentException extends BitMouthAPIException {
-    private static final long serialVersionUID = -8065837340826807525L;
+public abstract class BaseBitmouthMediaTestCase extends BaseBitmouthTestCase{
+    
+    NetworkIdInfo networkInfo;
+    MediaInfo mediaInfo;
+    MediaTemplateImpl mediaTemplate;
+    
+    @Override
+    protected void setUp() throws Exception {
+	super.setUp();
+	  mediaInfo = client.createMedia();
+	  mediaTemplate=new MediaTemplateImpl(mediaInfo, urlBuilder);
+    }
 }

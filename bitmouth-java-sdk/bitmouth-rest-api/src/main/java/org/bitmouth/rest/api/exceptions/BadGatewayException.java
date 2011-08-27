@@ -26,5 +26,6 @@ package org.bitmouth.rest.api.exceptions;
  * @author Shamaila Tahir
  */
 public class BadGatewayException extends BitMouthAPIException {
+    private static final long serialVersionUID = -5159502004678284177L;
 
 }

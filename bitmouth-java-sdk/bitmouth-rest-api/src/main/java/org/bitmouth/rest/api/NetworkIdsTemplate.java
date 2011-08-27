@@ -25,7 +25,6 @@ import org.bitmouth.rest.api.exceptions.AuthorizationException;
 import org.bitmouth.rest.api.exceptions.BadGatewayException;
 import org.bitmouth.rest.api.exceptions.BadRequestException;
 import org.bitmouth.rest.api.exceptions.ResourceNotFoundException;
-import org.bitmouth.rest.api.resources.MediaInfo;
 import org.bitmouth.rest.api.resources.NetworkIdInfo;
 
 /**
@@ -50,7 +49,7 @@ public interface NetworkIdsTemplate {
      * @throws AuthorizationException the network ID exists but it not associated with the specified application
      * @throws ResourceNotFoundException the networkId is not registered. 
      */
-    public NetworkIdInfo getNetworkIdAssociatedWithApplication(String networkId) throws ResourceNotFoundException, AuthorizationException;
+    public boolean getNetworkIdAssociatedWithApplication(String networkId) throws AuthorizationException;
 
     /**
      * This method registers a network ID and phone number pair and relates them to the current application. 

@@ -43,12 +43,14 @@ import org.bitmouth.rest.util.Util;
  */
 public class MockNetworkIdsTemplate implements NetworkIdsTemplate {
     
+    @SuppressWarnings("serial")
     private List<String> myappNetworkIds = new ArrayList<String>(){{
 	add("123");
     }};
     
+    @SuppressWarnings("serial")
     private Map<String,List<String>> associatedNetworkIds =  new HashMap<String, List<String>>(){{
-	put("myapp",myappNetworkIds);
+	put("f180804f-5eda-4e6b-8f4e-ecea52362396",myappNetworkIds);
     }};
     
     private String appKey;
@@ -66,24 +68,26 @@ public class MockNetworkIdsTemplate implements NetworkIdsTemplate {
      */
     public boolean isRegistered(String networkId) throws AuthorizationException {
 	InputStream jsonStream = getClass().getResourceAsStream("networkid/"+networkId + ".json.txt");	
-	NetworkIdInfo networkIdInfo = jsonStream==null?null:JSONHelper.readNetworkIdInfoFromJSON(jsonStream);
-	return networkIdInfo!=null;
+//NetworkIdInfo networkIdInfo = jsonStream==null?null:JSONHelper.readNetworkIdInfoFromJSON(jsonStream);
+//	return networkIdInfo!=null;
+	return jsonStream!=null;
     }
 
     /* (non-Javadoc)
      * @see org.bitmouth.rest.api.NetworkIdsTemplate#getNetworkIdAssociatedWithApplication(java.lang.String)
      */
-    public NetworkIdInfo getNetworkIdAssociatedWithApplication(String networkId)
+    public boolean getNetworkIdAssociatedWithApplication(String networkId)
 	    throws ResourceNotFoundException, AuthorizationException {
 	InputStream jsonStream = getClass().getResourceAsStream("networkid/"+ networkId + ".json.txt");
 	if( jsonStream == null){
-	    throw new ResourceNotFoundException(networkId);
+	    //throw new ResourceNotFoundException(networkId);
+	    return false;
 	}	
 	List<String> appNetworkIds = associatedNetworkIds.get(appKey);
-	if(!appNetworkIds.contains(networkId) ) {
+	if(appNetworkIds==null || !appNetworkIds.contains(networkId) ) {
 	    throw new AuthorizationException();
 	}	
-	return JSONHelper.readNetworkIdInfoFromJSON(jsonStream);
+	return true;
     }
 
     /* (non-Javadoc)

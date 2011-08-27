@@ -21,15 +21,12 @@
  */
 package org.bitmouth.rest.impl;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.net.URL;
 
 import org.bitmouth.rest.api.MediaTemplate;
 import org.bitmouth.rest.api.exceptions.BadGatewayException;
 import org.bitmouth.rest.api.exceptions.BadRequestException;
-import org.bitmouth.rest.api.exceptions.ConnectionException;
 import org.bitmouth.rest.api.exceptions.ResourceNotFoundException;
 import org.bitmouth.rest.api.resources.MediaInfo;
 import org.bitmouth.rest.api.resources.NetworkIdInfo;
@@ -69,9 +66,9 @@ public class MediaTemplateImpl implements MediaTemplate {
 	UrlBuilder urlBuilder = urlBuilderFactory.get();
 	urlBuilder.addPathSegment("media")
 		  .addPathSegment(mediaInfo.getMediaId())
-		  .addParameter("networkid", networkInfo.getNetworkId())
-		  .addParameter("action", "record");
-	URL url = urlBuilder.createForPost();
+		  .addPostParameter("networkid", networkInfo.getNetworkId())
+		  .addPostParameter("action", "record");
+	URL url = urlBuilder.create();
 	String resourceId = networkInfo.getNetworkId();
 	InputStream is = ConnectionUtil.doPost(url, resourceId,urlBuilder.getPostContents());
 	return JSONHelper.readMediaInfoFromJSON(is);
@@ -86,9 +83,9 @@ public class MediaTemplateImpl implements MediaTemplate {
 	    ResourceNotFoundException, BadGatewayException {
 	UrlBuilder urlBuilder = urlBuilderFactory.get().addPathSegment("media")
 	  		.addPathSegment(mediaInfo.getMediaId())
-	  		.addParameter("networkid", networkInfo.getNetworkId())
-	  		.addParameter("action", "record");
-	URL url = urlBuilder.createForPost();
+	  		.addPostParameter("networkid", networkInfo.getNetworkId())
+	  		.addPostParameter("action", "blast");
+	URL url = urlBuilder.create();
 	InputStream is = ConnectionUtil.doPost(url, networkInfo.getNetworkId(),urlBuilder.getPostContents());
 	//TODO are you sure we want to replace class level mediaInfo with this newly created mediaInfo. see in grantUpload also
 	return mediaInfo = JSONHelper.readMediaInfoFromJSON(is);
@@ -103,8 +100,8 @@ public class MediaTemplateImpl implements MediaTemplate {
 	    ResourceNotFoundException, BadGatewayException {
 	UrlBuilder urlBuilder = urlBuilderFactory.get().addPathSegment("media")
 		.addPathSegment(mediaInfo.getMediaId())
-		.addParameter("action", "upload_grant");
-        URL url = urlBuilder.createForPost();
+		.addPostParameter("action", "upload_grant");
+        URL url = urlBuilder.create();
         InputStream is = ConnectionUtil.doPost(url,mediaInfo.getMediaId(),urlBuilder.getPostContents());
         return JSONHelper.readUploadInfoFromJSON(is);
     }
@@ -118,8 +115,8 @@ public class MediaTemplateImpl implements MediaTemplate {
 	    ResourceNotFoundException, BadGatewayException {
 	UrlBuilder urlBuilder = urlBuilderFactory.get().addPathSegment("media")
 	.addPathSegment(mediaInfo.getMediaId())
-	.addParameter("action", "upload_grant");
-	URL url = urlBuilder.createForPost();
+	.addPostParameter("action", "remove");
+	URL url = urlBuilder.create();
 	InputStream is = ConnectionUtil.doPost(url, mediaInfo.getMediaId(),urlBuilder.getPostContents());
 	return mediaInfo = JSONHelper.readMediaInfoFromJSON(is);
     }
@@ -131,8 +128,9 @@ public class MediaTemplateImpl implements MediaTemplate {
      */
     public MediaInfo status() {
 	UrlBuilder urlBuilder = urlBuilderFactory.get().addPathSegment("media")
-			.addPathSegment(mediaInfo.getMediaId());
-	URL url = urlBuilder.createForGet();
+								.addPathSegment("status")
+								.addPathSegment(mediaInfo.getMediaId());
+	URL url = urlBuilder.create();
 	InputStream is = ConnectionUtil.doGet(url, mediaInfo.getMediaId());
 	return JSONHelper.readMediaInfoFromJSON(is);
 

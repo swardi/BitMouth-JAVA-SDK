@@ -48,7 +48,7 @@ public interface BitMouthClient {
      * This method returns a Media ID that can be used with subsequent "record" and "blast" methods.
      * @return
      */
-    public MediaInfo createMedia(NetworkIdInfo networkId) throws BadRequestException, ResourceNotFoundException;
+    public MediaInfo createMedia() throws BadRequestException, ResourceNotFoundException;
     
     /**
      * This methods returns a MediaTemplate to work with a particular media id

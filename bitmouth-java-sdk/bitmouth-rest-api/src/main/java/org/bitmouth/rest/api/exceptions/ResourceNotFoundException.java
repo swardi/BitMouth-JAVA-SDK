@@ -26,6 +26,10 @@ package org.bitmouth.rest.api.exceptions;
  *
  */
 public class ResourceNotFoundException extends BitMouthAPIException {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -684575125889586639L;
     private String resourceId;
 
     /**

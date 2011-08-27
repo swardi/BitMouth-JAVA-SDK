@@ -19,12 +19,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.bitmouth.rest.api.exceptions;
+package org.bitmouth.rest.api;
+
+import org.bitmouth.rest.util.UrlBuilder;
+import org.bitmouth.rest.util.UrlBuilder.URLBuilderFactory;
+
+import junit.framework.TestCase;
 
 /**
- * Thrown when attempt is made at accessing a Media that have no content
  * @author Shamaila Tahir
+ *
  */
-public class NoContentException extends BitMouthAPIException {
-    private static final long serialVersionUID = -8065837340826807525L;
+public abstract class BaseBitmouthTestCase extends TestCase {
+    BitMouthClient client;
+    URLBuilderFactory urlBuilder=new UrlBuilder.URLBuilderFactory("https://api4.bitmouth.com/api/rest","f180804f-5eda-4e6b-8f4e-ecea52362396");
+    
+    /* (non-Javadoc)
+        * @see junit.framework.TestCase#setUp()
+        */
+       @Override
+       protected void setUp() throws Exception {
+   	super.setUp();
+   	//The value of App key does not matter in this case
+   	client = BitMouth.createClient("f180804f-5eda-4e6b-8f4e-ecea52362396", "https://api4.bitmouth.com/api/rest");
+       }
 }

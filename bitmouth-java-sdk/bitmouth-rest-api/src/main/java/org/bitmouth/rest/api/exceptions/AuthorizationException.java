@@ -26,5 +26,6 @@ package org.bitmouth.rest.api.exceptions;
  * @author Shamaila Tahir
  */
 public class AuthorizationException extends BitMouthAPIException {
+    private static final long serialVersionUID = -857700340413201687L;
 
 }

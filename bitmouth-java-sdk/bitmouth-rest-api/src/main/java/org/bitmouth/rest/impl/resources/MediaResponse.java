@@ -19,12 +19,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.bitmouth.rest.api.exceptions;
+package org.bitmouth.rest.impl.resources;
+
+import org.bitmouth.rest.api.resources.MediaInfo;
 
 /**
- * Thrown when attempt is made at accessing a Media that have no content
  * @author Shamaila Tahir
+ *
  */
-public class NoContentException extends BitMouthAPIException {
-    private static final long serialVersionUID = -8065837340826807525L;
+public class MediaResponse {
+    MediaInfo mediaResponse;
+
+    /**
+     * @return the mediaResponse
+     */
+    public MediaInfo getMediaResponse() {
+        return mediaResponse;
+    }
+
+    /**
+     * @param mediaResponse the mediaResponse to set
+     */
+    public void setMediaResponse(MediaInfo mediaResponse) {
+        this.mediaResponse = mediaResponse;
+    }
+    
+    public MediaInfo getMediaInfo(){
+	return mediaResponse;
+    }
 }

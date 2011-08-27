@@ -23,7 +23,6 @@ package org.bitmouth.rest.api;
 
 import org.bitmouth.rest.api.resources.NetworkIdInfo;
 
-import junit.framework.TestCase;
 
 /**
  * @author Shamaila Tahir
@@ -31,6 +30,11 @@ import junit.framework.TestCase;
  */
 public class NetworkIdsTest extends BaseBitmouthTestCase{
     
+	public void testRegisterNetworkId(){
+	     NetworkIdInfo newNetworkInfo = client.networkIds().register("123", "349582");
+	     assertNotNull(newNetworkInfo);          
+	 }
+	
 public void testRegisteredNetworkId(){
      boolean isRegistered = client.networkIds().isRegistered("123");
      System.out.println("isRegistered 123 " + isRegistered);
@@ -38,19 +42,15 @@ public void testRegisteredNetworkId(){
  }
  
  public void testUnregisteredNetworkId(){
-     boolean isRegistered = client.networkIds().isRegistered("asd");
+     boolean isRegistered = client.networkIds().isRegistered("124");
      System.out.println("isRegistered 124 " + isRegistered);
      assertFalse( isRegistered );          
  }
  
  public void testNetworkIdRelated(){
-     NetworkIdInfo associatedNetworkId = client.networkIds().getNetworkIdAssociatedWithApplication("123");
-     assertNotNull(associatedNetworkId);          
+     assertTrue(client.networkIds().getNetworkIdAssociatedWithApplication("123"));          
  }
  
  
- public void testRegisterNetworkId(){
-     NetworkIdInfo newNetworkInfo = client.networkIds().register("22222", "349582");
-     assertNotNull(newNetworkInfo);          
- }
+ 
 }

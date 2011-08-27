@@ -19,12 +19,43 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.bitmouth.rest.api.exceptions;
+package org.bitmouth.rest.api;
+
 
 /**
- * Thrown when attempt is made at accessing a Media that have no content
  * @author Shamaila Tahir
+ *
  */
-public class NoContentException extends BitMouthAPIException {
-    private static final long serialVersionUID = -8065837340826807525L;
+public class ConferenceTest extends BaseBitMouthConferenceTestCase{
+
+    public void testHangUp(){
+	// conferenceTemplate.hangup(networkInfo);
+    }
+    
+    public void testAddToConference(){
+	//conferenceTemplate.addToConference(networkIdInfos);
+    }
+    
+    public void testCloseConference(){
+	//closeConference
+    }
+    
+    public void testCloseAlreadyClosedConference(){
+	
+    }
+    
+    public void testMove(){
+	
+    }
+    
+    public void testMute(){
+	
+    }
+    
+    public void testUnMute(){
+	
+    }
+    
+ 
 }
+

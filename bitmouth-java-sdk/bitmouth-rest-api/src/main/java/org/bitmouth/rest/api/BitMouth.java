@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import org.bitmouth.rest.impl.BitMouthClientImpl;
 
 /**
  * @author Shamaila Tahir

@@ -21,7 +21,6 @@
  */
 package org.bitmouth.rest.impl;
 
-import java.io.InputStream;
 import java.net.URL;
 
 import org.bitmouth.rest.api.ConferenceTemplate;
@@ -65,11 +64,12 @@ public class ConferenceTemplateImpl implements ConferenceTemplate {
 	    throws BadRequestException, BadGatewayException {
 	UrlBuilder urlBuilder = urlBuilderFactory.get()
 		.addPathSegment("conference")
-		.addPathSegment(conference.getConferenceId());
+		.addPathSegment(conference.getConferenceId())
+		.addPostParameter("action","add");
 	for (NetworkIdInfo networkId : networkIdInfos) {
-	    urlBuilder.addParameter("networkid", networkId.getNetworkId());
+	    urlBuilder.addPostParameter("networkid", networkId.getNetworkId());
 	}
-	URL url = urlBuilder.createForPost();
+	URL url = urlBuilder.create();
 	ConnectionUtil.doPost(url, conference.getConferenceId(),
 		urlBuilder.getPostContents());
 
@@ -84,8 +84,9 @@ public class ConferenceTemplateImpl implements ConferenceTemplate {
 	    BadGatewayException, ResourceNotFoundException {
 	UrlBuilder urlBuilder = urlBuilderFactory.get()
 		.addPathSegment("conference")
-		.addPathSegment(conference.getConferenceId());
-	URL url = urlBuilder.createForPost();
+		.addPathSegment(conference.getConferenceId())
+		.addPostParameter("action","close");
+	URL url = urlBuilder.create();
 	ConnectionUtil.doPost(url, conference.getConferenceId(),
 		urlBuilder.getPostContents());
 
@@ -105,8 +106,8 @@ public class ConferenceTemplateImpl implements ConferenceTemplate {
 		.addPathSegment("conference")
 		.addPathSegment(conference.getConferenceId())
 		.addPathSegment(networkInfo.getNetworkId())
-		.addPathSegment("hangup");
-	URL url = urlBuilder.createForPost();
+		.addPostParameter("action","hangup");
+	URL url = urlBuilder.create();
 	ConnectionUtil.doPost(url, conference.getConferenceId(),
 		urlBuilder.getPostContents());
 
@@ -123,10 +124,10 @@ public class ConferenceTemplateImpl implements ConferenceTemplate {
 	UrlBuilder urlBuilder = urlBuilderFactory.get()
 		.addPathSegment("conference")
 		.addPathSegment(conference.getConferenceId())
-		.addPathSegment(toConference.getConferenceId())
 		.addPathSegment(networkInfo.getNetworkId())
-		.addPathSegment("move");
-	URL url = urlBuilder.createForPost();
+		.addPostParameter("toconferenceid",toConference.getConferenceId())
+		.addPostParameter("action","move");
+	URL url = urlBuilder.create();
 	ConnectionUtil.doPost(url, conference.getConferenceId(),
 		urlBuilder.getPostContents());
 
@@ -159,15 +160,13 @@ public class ConferenceTemplateImpl implements ConferenceTemplate {
 	UrlBuilder urlBuilder = urlBuilderFactory.get()
 		.addPathSegment("conference")
 		.addPathSegment(conference.getConferenceId())
-		.addPathSegment(networkInfo.getNetworkId())
-		.addParameter("conferenceid ", conference.getConferenceId())
-		.addParameter("networkid ", networkInfo.getNetworkId());
+		.addPathSegment(networkInfo.getNetworkId());
 		if(mute)
-		    urlBuilder.addParameter("action", "mute");
+		    urlBuilder.addPostParameter("action", "mute");
 		else 
-		    urlBuilder.addParameter("action", "unmute");
+		    urlBuilder.addPostParameter("action", "unmute");
 		
-	URL url = urlBuilder.createForPost();
+	URL url = urlBuilder.create();
 	ConnectionUtil.doPost(url, conference.getConferenceId(),
 		urlBuilder.getPostContents());
     }

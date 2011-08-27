@@ -63,7 +63,7 @@ public class MockBitMouthClient implements BitMouthClient {
     /* (non-Javadoc)
      * @see org.bitmouth.rest.api.BitMouthClient#createMedia(org.bitmouth.rest.api.resources.NetworkIdInfo)
      */
-    public MediaInfo createMedia(NetworkIdInfo networkId) throws BadRequestException, ResourceNotFoundException{
+    public MediaInfo createMedia() throws BadRequestException, ResourceNotFoundException{
 	MediaInfoImpl mediaInfo = new MediaInfoImpl();
 	String hash = String.valueOf(new Object().hashCode());
 	mediaInfo.setDownloadUrl("");
