@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>bitmouth-java-sdk</artifactId>
 		<groupId>com.bitmouth</groupId>
-		<version>0.0.1</version>
+		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	<groupId>com.bitmouth</groupId>
 	<artifactId>bitmouth-rest-api</artifactId>
