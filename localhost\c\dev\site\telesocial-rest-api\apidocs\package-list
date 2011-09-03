@@ -1,0 +1,6 @@
+org.telesocial.rest.api
+org.telesocial.rest.api.exceptions
+org.telesocial.rest.api.resources
+org.telesocial.rest.impl
+org.telesocial.rest.impl.resources
+org.telesocial.rest.util
